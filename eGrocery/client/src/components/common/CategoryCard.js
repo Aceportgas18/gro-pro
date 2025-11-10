@@ -10,11 +10,11 @@ const CategoryCard = ({ category }) => {
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <div className="relative">
           <img
-            src={category.image || '/api/placeholder/300/200'}
+            src={category.image || 'https://via.placeholder.com/300x200?text=No+Image'}
             alt={category.name}
             className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
             onError={(e) => {
-              e.target.src = '/api/placeholder/300/200';
+              e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
             }}
           />
           <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"></div>

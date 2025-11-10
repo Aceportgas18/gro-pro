@@ -85,11 +85,11 @@ const Cart = () => {
                       <div className="flex items-center space-x-4">
                         <div className="flex-shrink-0">
                           <img
-                            src={product.image || '/api/placeholder/100/100'}
+                            src={product.image || 'https://via.placeholder.com/100x100?text=No+Image'}
                             alt={product.name}
                             className="w-20 h-20 object-cover rounded-lg"
                             onError={(e) => {
-                              e.target.src = '/api/placeholder/100/100';
+                              e.target.src = 'https://via.placeholder.com/100x100?text=No+Image';
                             }}
                           />
                         </div>

@@ -71,7 +71,7 @@ const Checkout = () => {
         subtotal: totalPrice
       };
 
-      const response = await api.post('/api/orders', orderPayload);
+      const response = await api.post('/orders', orderPayload);
       
       if (response.data.success) {
         clearCart();
@@ -347,8 +347,8 @@ const Checkout = () => {
                     const itemPrice = getItemPrice(item);
                     return (
                       <div key={item.product._id} className="flex items-center space-x-3">
-                        <img
-                          src={item.product.image || '/api/placeholder/50/50'}
+                          <img
+                          src={item.product.image || 'https://via.placeholder.com/50x50?text=No+Image'}
                           alt={item.product.name}
                           className="w-12 h-12 object-cover rounded"
                         />

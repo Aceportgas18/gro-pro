@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const colors = require('colors');
-require('dotenv').config();
+require('dotenv').config({ encoding: 'utf16le' });
 
 const connectDB = require('./config/database');
 const errorHandler = require('./middleware/errorHandler');
@@ -39,6 +39,7 @@ app.use(helmet());
 app.use(cors({
   origin: [
     process.env.CLIENT_URL || 'http://localhost:3000',
+    'http://localhost:3001',
     'http://localhost:12000',
     'https://work-1-fcuowjwyuswghovs.prod-runtime.all-hands.dev',
     'https://work-2-fcuowjwyuswghovs.prod-runtime.all-hands.dev'

@@ -16,7 +16,7 @@ const OrderConfirmation = () => {
   const fetchOrder = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/api/orders/${orderId}`);
+      const response = await api.get(`/orders/${orderId}`);
       setOrder(response.data.data);
     } catch (err) {
       setError('Order not found');
@@ -127,11 +127,11 @@ const OrderConfirmation = () => {
                 {order.items.map((item) => (
                   <div key={item._id} className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
                     <img
-                      src={item.product.image || '/api/placeholder/80/80'}
+                      src={item.product.image || 'https://via.placeholder.com/80x80?text=No+Image'}
                       alt={item.product.name}
                       className="w-20 h-20 object-cover rounded-lg"
                       onError={(e) => {
-                        e.target.src = '/api/placeholder/80/80';
+                        e.target.src = 'https://via.placeholder.com/80x80?text=No+Image';
                       }}
                     />
                     <div className="flex-1">

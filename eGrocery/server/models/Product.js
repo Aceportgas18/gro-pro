@@ -50,7 +50,7 @@ const productSchema = new mongoose.Schema({
     },
     unit: {
       type: String,
-      enum: ['piece', 'kg', 'gram', 'liter', 'ml', 'dozen', 'pack'],
+      enum: ['piece', 'kg', 'gram', 'liter', 'ml', 'dozen', 'pack', 'bunch', 'lb', 'gallon', 'container', 'loaf', 'bottle'],
       default: 'piece'
     }
   },

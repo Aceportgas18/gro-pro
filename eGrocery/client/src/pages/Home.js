@@ -12,10 +12,10 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
-          api.get('/api/products/featured?limit=8'),
-          api.get('/api/categories')
+          api.get('/products/featured?limit=8'),
+          api.get('/categories')
         ]);
-        
+
         setFeaturedProducts(productsRes.data.data);
         setCategories(categoriesRes.data.data.slice(0, 6));
       } catch (error) {
@@ -70,7 +70,7 @@ const Home = () => {
               <span className="block text-secondary-400">Delivered Daily</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-primary-100 max-w-3xl mx-auto">
-              Shop from our wide selection of fresh fruits, vegetables, dairy, and more. 
+              Shop from our wide selection of fresh fruits, vegetables, dairy, and more.
               Quality guaranteed with fast delivery to your doorstep.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -116,7 +116,7 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Shop by Category</h2>
             <p className="text-lg text-gray-600">Explore our wide range of fresh products</p>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {categories.map((category) => (
               <Link

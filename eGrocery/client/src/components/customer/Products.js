@@ -45,7 +45,7 @@ const Products = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/api/categories');
+      const response = await api.get('/categories');
       setCategories(response.data.data || []);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -61,9 +61,9 @@ const Products = () => {
         ...filters
       });
 
-      const response = await api.get(`/api/products?${params}`);
+      const response = await api.get(`/products?${params}`);
       const data = response.data;
-      
+
       setProducts(data.data || []);
       setPagination(prev => ({
         ...prev,
@@ -256,7 +256,7 @@ const Products = () => {
                     >
                       Previous
                     </button>
-                    
+
                     {[...Array(pagination.totalPages)].map((_, index) => {
                       const page = index + 1;
                       if (
@@ -285,7 +285,7 @@ const Products = () => {
                       }
                       return null;
                     })}
-                    
+
                     <button
                       onClick={() => handlePageChange(pagination.page + 1)}
                       disabled={pagination.page === pagination.totalPages}

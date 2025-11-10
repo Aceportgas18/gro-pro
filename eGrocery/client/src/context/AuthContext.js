@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import api from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -64,22 +65,22 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   // Set auth token in axios headers
-  const setAuthToken = (token) => {
+  const setAuthToken = useCallback((token) => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
       delete axios.defaults.headers.common['Authorization'];
     }
-  };
+  }, []);
 
   // Load user
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     if (localStorage.token) {
       setAuthToken(localStorage.token);
     }
 
     try {
-      const res = await axios.get('/api/auth/me');
+      const res = await api.get('/auth/me');
       dispatch({
         type: 'USER_LOADED',
         payload: res.data.data
@@ -90,14 +91,14 @@ export const AuthProvider = ({ children }) => {
         payload: err.response?.data?.message || 'Authentication failed'
       });
     }
-  };
+  }, [setAuthToken]);
 
   // Register user
   const register = async (formData) => {
     dispatch({ type: 'SET_LOADING', payload: true });
-    
+
     try {
-      const res = await axios.post('/api/auth/register', formData);
+      const res = await api.post('/auth/register', formData);
       dispatch({
         type: 'REGISTER_SUCCESS',
         payload: res.data
@@ -116,9 +117,9 @@ export const AuthProvider = ({ children }) => {
   // Login user
   const login = async (formData) => {
     dispatch({ type: 'SET_LOADING', payload: true });
-    
+
     try {
-      const res = await axios.post('/api/auth/login', formData);
+      const res = await api.post('/auth/login', formData);
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: res.data
@@ -137,9 +138,9 @@ export const AuthProvider = ({ children }) => {
   // Admin login
   const adminLogin = async (formData) => {
     dispatch({ type: 'SET_LOADING', payload: true });
-    
+
     try {
-      const res = await axios.post('/api/auth/admin-login', formData);
+      const res = await api.post('/auth/admin-login', formData);
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: res.data
@@ -168,7 +169,7 @@ export const AuthProvider = ({ children }) => {
   // Update profile
   const updateProfile = async (formData) => {
     try {
-      const res = await axios.put('/api/auth/profile', formData);
+      const res = await api.put('/auth/profile', formData);
       dispatch({
         type: 'USER_LOADED',
         payload: res.data.data
@@ -180,8 +181,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    loadUser();
-  }, []);
+    const token = localStorage.getItem('token');
+    if (token) {
+      loadUser();
+    } else {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
+  }, [loadUser]);
 
   return (
     <AuthContext.Provider

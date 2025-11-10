@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const colors = require('colors');
-require('dotenv').config();
+require('dotenv').config({ encoding: 'utf16le' });
 
 const User = require('../models/User');
 const Category = require('../models/Category');
@@ -26,7 +26,7 @@ const users = [
   {
     name: 'Admin User',
     email: process.env.ADMIN_EMAIL || 'admin@egrocery.com',
-    password: process.env.ADMIN_PASSWORD || 'admin123',
+    password: process.env.ADMIN_PASSWORD || 'Admin123',
     role: 'admin',
     phone: '+1-555-0100',
     address: {
@@ -40,7 +40,7 @@ const users = [
   {
     name: 'John Doe',
     email: 'john@example.com',
-    password: 'password123',
+    password: 'Password123',
     role: 'customer',
     phone: '+1-555-0101',
     address: {
@@ -54,7 +54,7 @@ const users = [
   {
     name: 'Jane Smith',
     email: 'jane@example.com',
-    password: 'password123',
+    password: 'Password123',
     role: 'customer',
     phone: '+1-555-0102',
     address: {

@@ -36,7 +36,7 @@ import AdminUsers from './pages/admin/AdminUsers';
 import axios from 'axios';
 
 // Set base URL for API calls
-axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL || '/api';
 
 function App() {
   return (
@@ -54,7 +54,7 @@ function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                
+
                 {/* Protected Routes */}
                 <Route path="/checkout" element={
                   <ProtectedRoute>
@@ -81,7 +81,7 @@ function App() {
                     <OrderConfirmation />
                   </ProtectedRoute>
                 } />
-                
+
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={
@@ -108,7 +108,7 @@ function App() {
             </main>
             <Footer />
           </div>
-          
+
           <ToastContainer
             position="top-right"
             autoClose={5000}

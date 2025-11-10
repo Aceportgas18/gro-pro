@@ -18,10 +18,10 @@ const Home = () => {
     try {
       setLoading(true);
       const [categoriesRes, productsRes] = await Promise.all([
-        api.get('/api/categories'),
-        api.get('/api/products?limit=8&featured=true')
+        api.get('/categories'),
+        api.get('/products?limit=8&featured=true')
       ]);
-      
+
       setCategories(categoriesRes.data.data || []);
       setFeaturedProducts(productsRes.data.data || []);
     } catch (err) {
@@ -46,7 +46,7 @@ const Home = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={fetchHomeData}
             className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600"
           >
@@ -64,11 +64,11 @@ const Home = () => {
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-5xl font-bold mb-6">Fresh Groceries Delivered</h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Get fresh fruits, vegetables, and daily essentials delivered to your doorstep. 
+            Get fresh fruits, vegetables, and daily essentials delivered to your doorstep.
             Quality guaranteed, convenience assured.
           </p>
-          <Link 
-            to="/products" 
+          <Link
+            to="/products"
             className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300"
           >
             Shop Now
@@ -95,8 +95,8 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl font-bold text-gray-800">Featured Products</h2>
-            <Link 
-              to="/products" 
+            <Link
+              to="/products"
               className="text-green-600 hover:text-green-700 font-semibold"
             >
               View All →
