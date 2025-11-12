@@ -182,4 +182,4 @@ After seeding the database, you can log in as admin using:
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License...
