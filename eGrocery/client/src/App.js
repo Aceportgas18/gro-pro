@@ -37,6 +37,7 @@ import axios from 'axios';
 
 // Set base URL for API calls
 axios.defaults.baseURL = process.env.REACT_APP_API_URL || '/api';
+axios.defaults.withCredentials = true;
 
 function App() {
   return (

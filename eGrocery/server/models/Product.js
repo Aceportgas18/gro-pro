@@ -114,7 +114,7 @@ const productSchema = new mongoose.Schema({
 
 // Create slug from name before saving
 productSchema.pre('save', function(next) {
-  if (this.isModified('name')) {
+  if (this.isModified('name') || this.isNew) {
     this.slug = this.name
       .toLowerCase()
       .replace(/[^a-zA-Z0-9]/g, '-')

@@ -27,7 +27,7 @@ const ProductCard = ({ product }) => {
   const stockStatus = getStockStatus();
 
   return (
-    <Link to={`/product/${product._id}`} className="group">
+    <Link to={`/products/${product._id}`} className="group">
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <div className="relative">
           <img

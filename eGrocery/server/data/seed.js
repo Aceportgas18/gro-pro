@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const colors = require('colors');
-require('dotenv').config({ encoding: 'utf16le' });
+require('dotenv').config();
 
 const User = require('../models/User');
 const Category = require('../models/Category');

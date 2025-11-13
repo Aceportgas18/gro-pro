@@ -14,11 +14,12 @@ const sendTokenResponse = (user, statusCode, res, message = 'Success') => {
   const options = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    secure: process.env.NODE_ENV === 'production', // Only true on HTTPS
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // ✅ Fix for localhost cookies
   };
 
-  res.status(statusCode)
+  res
+    .status(statusCode)
     .cookie('token', token, options)
     .json({
       success: true,

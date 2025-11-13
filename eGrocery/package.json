@@ -13,8 +13,15 @@
     "install-all": "npm run install-server && npm run install-client",
     "seed": "cd server && npm run seed"
   },
-  "keywords": ["ecommerce", "grocery", "mern", "react", "nodejs", "mongodb"],
-  "author": "OpenHands AI Developer",
+  "keywords": [
+    "ecommerce",
+    "grocery",
+    "mern",
+    "react",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "Brookbytes Developer",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2"

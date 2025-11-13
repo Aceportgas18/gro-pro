@@ -1,15 +1,13 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import api from '../utils/api';
+import api from '../utils/api'; // axios instance with withCredentials:true
 
 const AuthContext = createContext();
 
 const initialState = {
   user: null,
-  token: localStorage.getItem('token'),
   isAuthenticated: false,
   loading: true,
-  error: null
+  error: null,
 };
 
 const authReducer = (state, action) => {
@@ -20,42 +18,32 @@ const authReducer = (state, action) => {
         isAuthenticated: true,
         loading: false,
         user: action.payload,
-        error: null
+        error: null,
       };
     case 'LOGIN_SUCCESS':
     case 'REGISTER_SUCCESS':
-      localStorage.setItem('token', action.payload.token);
       return {
         ...state,
-        token: action.payload.token,
-        user: action.payload.user,
         isAuthenticated: true,
         loading: false,
-        error: null
+        user: action.payload.user,
+        error: null,
       };
     case 'AUTH_ERROR':
     case 'LOGIN_FAIL':
     case 'REGISTER_FAIL':
     case 'LOGOUT':
-      localStorage.removeItem('token');
       return {
         ...state,
-        token: null,
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: action.payload
+        error: action.payload || null,
       };
     case 'CLEAR_ERRORS':
-      return {
-        ...state,
-        error: null
-      };
+      return { ...state, error: null };
     case 'SET_LOADING':
-      return {
-        ...state,
-        loading: action.payload
-      };
+      return { ...state, loading: action.payload };
     default:
       return state;
   }
@@ -64,129 +52,97 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Set auth token in axios headers
-  const setAuthToken = useCallback((token) => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      delete axios.defaults.headers.common['Authorization'];
-    }
-  }, []);
-
-  // Load user
+  // 🔹 Load currently logged-in user (via cookie)
   const loadUser = useCallback(async () => {
-    if (localStorage.token) {
-      setAuthToken(localStorage.token);
-    }
-
     try {
       const res = await api.get('/auth/me');
-      dispatch({
-        type: 'USER_LOADED',
-        payload: res.data.data
-      });
+      dispatch({ type: 'USER_LOADED', payload: res.data.data });
     } catch (err) {
       dispatch({
         type: 'AUTH_ERROR',
-        payload: err.response?.data?.message || 'Authentication failed'
+        payload: err.response?.data?.message || 'Authentication failed',
       });
     }
-  }, [setAuthToken]);
+  }, []);
 
-  // Register user
+  // 🔹 Register user
   const register = async (formData) => {
     dispatch({ type: 'SET_LOADING', payload: true });
-
     try {
       const res = await api.post('/auth/register', formData);
-      dispatch({
-        type: 'REGISTER_SUCCESS',
-        payload: res.data
-      });
-      loadUser();
+      await loadUser(); // loads user from cookie
+      dispatch({ type: 'REGISTER_SUCCESS', payload: res.data });
       return { success: true };
     } catch (err) {
       dispatch({
         type: 'REGISTER_FAIL',
-        payload: err.response?.data?.message || 'Registration failed'
+        payload: err.response?.data?.message || 'Registration failed',
       });
-      return { success: false, error: err.response?.data?.message || 'Registration failed' };
+      return { success: false, error: err.response?.data?.message };
     }
   };
 
-  // Login user
+  // 🔹 Login user
   const login = async (formData) => {
     dispatch({ type: 'SET_LOADING', payload: true });
-
     try {
       const res = await api.post('/auth/login', formData);
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: res.data
-      });
-      loadUser();
+      await loadUser(); // loads user from cookie
+      dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
       return { success: true };
     } catch (err) {
       dispatch({
         type: 'LOGIN_FAIL',
-        payload: err.response?.data?.message || 'Login failed'
+        payload: err.response?.data?.message || 'Login failed',
       });
-      return { success: false, error: err.response?.data?.message || 'Login failed' };
+      return { success: false, error: err.response?.data?.message };
     }
   };
 
-  // Admin login
+  // 🔹 Admin login
   const adminLogin = async (formData) => {
     dispatch({ type: 'SET_LOADING', payload: true });
-
     try {
       const res = await api.post('/auth/admin-login', formData);
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: res.data
-      });
-      loadUser();
+      await loadUser();
+      dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
       return { success: true };
     } catch (err) {
       dispatch({
         type: 'LOGIN_FAIL',
-        payload: err.response?.data?.message || 'Admin login failed'
+        payload: err.response?.data?.message || 'Admin login failed',
       });
-      return { success: false, error: err.response?.data?.message || 'Admin login failed' };
+      return { success: false, error: err.response?.data?.message };
     }
   };
 
-  // Logout
-  const logout = () => {
+  // 🔹 Logout user
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout'); // clears cookie server-side
+    } catch (err) {
+      console.warn('Logout failed (still clearing locally):', err.message);
+    }
     dispatch({ type: 'LOGOUT' });
   };
 
-  // Clear errors
-  const clearErrors = () => {
-    dispatch({ type: 'CLEAR_ERRORS' });
-  };
+  // 🔹 Clear error messages
+  const clearErrors = () => dispatch({ type: 'CLEAR_ERRORS' });
 
-  // Update profile
+  // 🔹 Update user profile
   const updateProfile = async (formData) => {
     try {
       const res = await api.put('/auth/profile', formData);
-      dispatch({
-        type: 'USER_LOADED',
-        payload: res.data.data
-      });
+      dispatch({ type: 'USER_LOADED', payload: res.data.data });
       return { success: true };
     } catch (err) {
       return { success: false, error: err.response?.data?.message || 'Profile update failed' };
     }
   };
 
+  // 🔹 Load user on mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      loadUser();
-    } else {
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
+    loadUser();
   }, [loadUser]);
 
   return (
@@ -199,7 +155,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         clearErrors,
         updateProfile,
-        loadUser
+        loadUser,
       }}
     >
       {children}
@@ -207,10 +163,9 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// Custom hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };

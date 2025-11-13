@@ -1,40 +1,28 @@
 import axios from 'axios';
 
-// Create axios instance with base configuration
+// ✅ Create axios instance
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // 🔥 Required for sending/receiving cookies
 });
 
-// Request interceptor to add auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// ✅ No need for token in headers anymore — handled automatically via cookies
 
-// Response interceptor to handle errors
+// Optional: Response interceptor for auth handling
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid - only redirect if not already on auth pages
       const currentPath = window.location.pathname;
-      if (!currentPath.includes('/login') && !currentPath.includes('/register') && !currentPath.includes('/admin/login')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+      if (
+        !currentPath.includes('/login') &&
+        !currentPath.includes('/register') &&
+        !currentPath.includes('/admin/login')
+      ) {
         window.location.href = '/login';
       }
     }

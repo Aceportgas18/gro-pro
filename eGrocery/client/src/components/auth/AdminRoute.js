@@ -8,19 +8,19 @@ const AdminRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600"></div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    // Redirect to admin login page
+  if (!isAuthenticated || !user) {
+    // Redirect to admin login, preserving intended route
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
-  if (user?.role !== 'admin') {
-    // Redirect to home if not admin
+  if (user.role !== 'admin') {
+    // Non-admin users redirected home
     return <Navigate to="/" replace />;
   }
 
