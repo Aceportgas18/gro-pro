@@ -64,6 +64,20 @@ const users = [
       zipCode: '54321',
       country: 'USA'
     }
+  },
+  {
+    name: 'Thiru',
+    email: 'thiru212004@gmail.com',
+    password: 'Abc@123',
+    role: 'customer',
+    phone: '+1-555-0103',
+    address: {
+      street: '123 User St',
+      city: 'User City',
+      state: 'UC',
+      zipCode: '12345',
+      country: 'USA'
+    }
   }
 ];
 
