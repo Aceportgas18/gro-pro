@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../utils/api';
 import { FiEdit2, FiAlertTriangle, FiCheckCircle } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
@@ -11,11 +11,7 @@ const StockManagement = () => {
   const [editingStock, setEditingStock] = useState(null);
   const [newStock, setNewStock] = useState('');
 
-  const config = {
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
-  };
+
 
   useEffect(() => {
     fetchData();
@@ -25,9 +21,9 @@ const StockManagement = () => {
     try {
       setLoading(true);
       const [ordersRes, productsRes, lowStockRes] = await Promise.all([
-        axios.get('/orders', config),
-        axios.get('/products', config),
-        axios.get('/products?stock=low', config)
+        api.get('/orders/admin/all'),
+        api.get('/products'),
+        api.get('/products/admin/low-stock')
       ]);
 
       setOrders(ordersRes.data.data || []);
@@ -43,7 +39,7 @@ const StockManagement = () => {
 
   const updateStock = async (productId) => {
     try {
-      await axios.put(`/products/${productId}/stock`, { stock: parseInt(newStock) }, config);
+      await api.put(`/products/${productId}/stock`, { quantity: parseInt(newStock) });
       toast.success('Stock updated successfully');
       fetchData();
       setEditingStock(null);
@@ -88,7 +84,7 @@ const StockManagement = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="font-medium text-gray-900">{product.name}</h3>
-                        <p className="text-sm text-gray-600">Stock: {product.stock}</p>
+                        <p className="text-sm text-gray-600">Stock: {product.stock.quantity}</p>
                       </div>
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                         Low Stock
@@ -117,7 +113,7 @@ const StockManagement = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {products.map((product) => {
-                    const stockInfo = getStockStatus(product.stock);
+                    const stockInfo = getStockStatus(product.stock.quantity);
                     const StatusIcon = stockInfo.icon;
 
                     return (
@@ -147,7 +143,7 @@ const StockManagement = () => {
                               min="0"
                             />
                           ) : (
-                            <span className="text-sm text-gray-900">{product.stock}</span>
+                            <span className="text-sm text-gray-900">{product.stock.quantity}</span>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -183,7 +179,7 @@ const StockManagement = () => {
                             <button
                               onClick={() => {
                                 setEditingStock(product._id);
-                                setNewStock(product.stock.toString());
+                                setNewStock(product.stock.quantity.toString());
                               }}
                               className="text-indigo-600 hover:text-indigo-900"
                             >

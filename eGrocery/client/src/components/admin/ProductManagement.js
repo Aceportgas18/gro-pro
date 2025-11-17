@@ -15,7 +15,7 @@ const ProductManagement = () => {
     description: '',
     price: '',
     category: '',
-    stock: '',
+    stockQuantity: '',
     primaryImage: '',
     images: [],
     isFeatured: false,
@@ -91,7 +91,7 @@ const ProductManagement = () => {
       description: product.description,
       price: product.price,
       category: product.category._id,
-      stock: product.stock,
+      stockQuantity: product.stock.quantity,
       primaryImage: product.primaryImage,
       images: product.images || [],
       isFeatured: product.isFeatured,
@@ -107,7 +107,7 @@ const ProductManagement = () => {
       description: '',
       price: '',
       category: '',
-      stock: '',
+      stockQuantity: '',
       primaryImage: '',
       images: [],
       isFeatured: false,
@@ -204,8 +204,8 @@ const ProductManagement = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
               <input
                 type="number"
-                value={formData.stock}
-                onChange={(e) => setFormData({...formData, stock: e.target.value})}
+                value={formData.stockQuantity}
+                onChange={(e) => setFormData({...formData, stockQuantity: e.target.value})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
               />
@@ -323,11 +323,11 @@ const ProductManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      product.stock > 10 ? 'bg-green-100 text-green-800' :
-                      product.stock > 0 ? 'bg-yellow-100 text-yellow-800' :
+                      product.stock.quantity > 10 ? 'bg-green-100 text-green-800' :
+                      product.stock.quantity > 0 ? 'bg-yellow-100 text-yellow-800' :
                       'bg-red-100 text-red-800'
                     }`}>
-                      {product.stock}
+                      {product.stock.quantity}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

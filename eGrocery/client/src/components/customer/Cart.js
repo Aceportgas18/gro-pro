@@ -131,7 +131,7 @@ const Cart = () => {
                             </span>
                             <button
                               onClick={() => handleQuantityChange(product._id, item.quantity + 1)}
-                              disabled={item.quantity >= product.stock}
+                              disabled={item.quantity >= product.stock.quantity}
                               className="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50"
                             >
                               +
@@ -159,9 +159,9 @@ const Cart = () => {
                       </div>
                       
                       {/* Stock Warning */}
-                      {product.stock < 10 && (
+                      {product.stock.quantity < 10 && (
                         <div className="mt-3 text-sm text-orange-600">
-                          Only {product.stock} left in stock
+                          Only {product.stock.quantity} left in stock
                         </div>
                       )}
                     </div>

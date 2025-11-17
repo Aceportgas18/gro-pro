@@ -19,8 +19,8 @@ const ProductCard = ({ product }) => {
   };
 
   const getStockStatus = () => {
-    if (product.stock === 0) return { text: 'Out of Stock', color: 'text-red-600' };
-    if (product.stock < 10) return { text: 'Low Stock', color: 'text-orange-600' };
+    if (product.stock.quantity === 0) return { text: 'Out of Stock', color: 'text-red-600' };
+    if (product.stock.quantity < 10) return { text: 'Low Stock', color: 'text-orange-600' };
     return { text: 'In Stock', color: 'text-green-600' };
   };
 
@@ -98,14 +98,14 @@ const ProductCard = ({ product }) => {
             
             <button
               onClick={handleAddToCart}
-              disabled={product.stock === 0}
+              disabled={product.stock.quantity === 0}
               className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                product.stock === 0
+                product.stock.quantity === 0
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-green-500 text-white hover:bg-green-600'
               }`}
             >
-              {product.stock === 0 ? 'Sold Out' : 'Add to Cart'}
+              {product.stock.quantity === 0 ? 'Sold Out' : 'Add to Cart'}
             </button>
           </div>
         </div>
